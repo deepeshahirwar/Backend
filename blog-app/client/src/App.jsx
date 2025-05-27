@@ -1,27 +1,27 @@
 import React from 'react'
-import './App.css' 
-import { Button } from '@/components/ui/button' 
-import { ButtonLoading } from '@/components/ui/Loader'
+import './App.css'
+
+import { BrowserRouter , Route, Routes } from 'react-router-dom'
+import { Layout } from './layout/Layout'
+import { RouteIndex } from './helpers/RouteNames' 
+import Index from './pages/Index'
+
 
 
 function App() {
- 
+
   return (
-    <> 
-    <div className='font-bold text-2xl p-4'>
-      Blog App 
-     cliend is working !.  
+    <BrowserRouter>
+      <Routes> 
 
-       <div> 
-          <Button>Click Me</Button>  
-         
-          
-       </div>
-    </div>
+      <Route
+       path = {RouteIndex} element = {<Layout/>}>
+        <Route index element = {<Index/>}/>  
 
-     <ButtonLoading/>
-     
-    </>
+        </Route> 
+
+      </Routes>
+    </BrowserRouter>
   )
 }
 
