@@ -64,11 +64,10 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     value.preventDefault();
     if (validate()) {
       console.log('Sign Up Success:', formData); 
-    //  toast.success('SignUp Successfully !')
-      // Submit the form data to backend here
+    
     }  
 
-
+ // User register logic here
     try {
       console.log(getEnv('VITE_API_BASE_URL'));
       

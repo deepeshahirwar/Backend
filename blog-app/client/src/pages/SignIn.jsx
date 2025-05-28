@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 
-import { RouteSingUp } from '@/helpers/RouteNames';
+import { RouteSingUp, RouteIndex  } from '@/helpers/RouteNames';
 import { Link } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
- 
+ import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify'; 
+import {getEnv} from '../helpers/getEnv'
 
-const SignIn = () => {
+const SignIn = () => { 
+
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     email: '',
@@ -43,12 +46,50 @@ const SignIn = () => {
     setErrors({ ...errors, [e.target.name]: '' });
   };
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e){
     e.preventDefault();
     if (validate()) {
-      console.log('Sign in successful:', formData); 
-      toast.success('Sign in successful!'); // Show success message
-      // Proceed with login logic here
+      //console.log('Sign in successful:', formData); 
+    //  toast.success('Sign in successful!'); 
+      
+      
+      // User login logic here 
+       try {
+            console.log(getEnv('VITE_API_BASE_URL'));
+            
+            const response = await 
+            fetch(`${getEnv('VITE_API_BASE_URL')}/auth/login`, {
+              method: 'POST', 
+              headers: {
+                'Content-Type': 'application/json',
+              }, 
+              credentials:'include',
+              body: JSON.stringify(formData),
+            });
+      
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+      
+            const data = await response.json();
+            console.log('SignIn respones:', data);
+            toast.success('User SignIn Successfully !')
+            
+            // Reset form after successful sign up
+            setFormData({
+              email: '',
+              password: '', 
+              
+            });
+            setErrors({}); 
+             
+            navigate(RouteIndex); // Redirect to Sign In page after successful sign up
+          } catch (error) {
+            console.error('Error during sign in:', error);
+            toast.error('SignIn Failed !')
+            
+          }
+
     }
   };  
   
