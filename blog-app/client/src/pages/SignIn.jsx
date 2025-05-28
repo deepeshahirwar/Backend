@@ -16,6 +16,8 @@ const SignIn = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false); // 👈 visibility state
+  
+  // login form valedation
 
   const validate = () => {
     const newErrors = {};
@@ -48,7 +50,10 @@ const SignIn = () => {
       toast.success('Sign in successful!'); // Show success message
       // Proceed with login logic here
     }
-  };
+  };  
+  
+
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
@@ -114,11 +119,11 @@ const SignIn = () => {
         </form>
 
         <div className="text-sm text-center text-gray-600 mt-6">
-          Not your computer? Use Guest mode to sign in privately.{' '}
-          <button className="text-blue-600 hover:underline">Learn more</button>
+          Don't have an account?
         </div>
 
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-2">
+          
           <Link
             to={RouteSingUp}
             className="text-blue-600 hover:underline text-sm font-medium"

@@ -24,9 +24,17 @@ const Topbar = () =>  {
 
     {/* login */}
     <div className=''>  
-        <Button asChild  className="rounded-full">  
+        <Button 
+        asChild   
+         className="w-full bg-blue-600
+          text-white font-medium py-2 
+           hover:bg-blue-700 transition rounded-full"
+        >  
                   
-            <Link to={RouteSingIn}>
+            <Link 
+            to={RouteSingIn}
+            
+            >
              <IoLogInSharp />
              Sign In</Link>
         </Button>

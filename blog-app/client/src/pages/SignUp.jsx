@@ -1,32 +1,37 @@
 import { RouteSingIn } from '@/helpers/RouteNames';
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
   
 import { toast } from 'react-toastify'; // Import toast for notifications
+import {getEnv} from '../helpers/getEnv'; // Import getEnv function to access environment variables
+import { useNavigate } from 'react-router-dom';
 
+const SignUp = () => {  
 
+  const navigaate = useNavigate(); 
 
-const SignUp = () => {
  const [showPassword, setShowPassword] = useState(false);
 const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    firstName:'',
     email: '',
     password: '',
     confirmPassword: ''
   });
 
   const [errors, setErrors] = useState({});
-
+ 
+  // Sign up form validation
   const validate = () => {
     const newErrors = {};
 
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (formData.firstName.length < 3) newErrors.firstName = 'First name must be at least 3 characters';
+    // if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+  
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -46,19 +51,64 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     return Object.keys(newErrors).length === 0;
   };
 
+
+
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: '' }); // clear error as user types
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Handle form submission
+   async function handleSubmit(value) {
+    value.preventDefault();
     if (validate()) {
       console.log('Sign Up Success:', formData); 
-      toast.success('SignUp Successfully !')
+    //  toast.success('SignUp Successfully !')
       // Submit the form data to backend here
+    }  
+
+
+    try {
+      console.log(getEnv('VITE_API_BASE_URL'));
+      
+      const response = await 
+      fetch(`${getEnv('VITE_API_BASE_URL')}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Sign Up Response:', data);
+      toast.success('SignUp Successfully !')
+      
+      // Reset form after successful sign up
+      setFormData({
+        firstName:'',
+        email: '',
+        password: '', 
+        confirmPassword: ''
+        
+      });
+      setErrors({}); 
+       
+      navigaate(RouteSingIn); // Redirect to Sign In page after successful sign up
+    } catch (error) {
+      console.error('Error during sign up:', error);
+      toast.error('SignUp Failed !')
+      
     }
-  };
+
+  }; 
+
+  
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -79,7 +129,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
             <input
               type="text"
               name="firstName"
-              placeholder="First name"
+              placeholder="User name"
               value={formData.firstName}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
@@ -87,17 +137,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
             {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
           </div>
 
-          <div className="mb-4">
-            <input
-              type="text"
-              name="lastName"
-              placeholder="Last name"
-              value={formData.lastName}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
-          </div>
+          
 
           <div className="mb-4">
             <input
