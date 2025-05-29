@@ -3,7 +3,8 @@ import User from "../models/user.model.js"
 import bcryptjs from 'bcryptjs' 
  import jwt from 'jsonwebtoken' 
 
-
+ 
+ // register controller
  export const Register = async (req, res, next)=>{  
     try { 
     const {firstName, email, password} = req.body 
@@ -39,7 +40,8 @@ import bcryptjs from 'bcryptjs'
 
 }  
 
-
+ 
+// login controller
 export const Login = async (req, res, next)=>{ 
     try { 
       const { email, password} = req.body  
@@ -77,11 +79,76 @@ res.cookie('access_toeken', token, {
 
 })
   
+const newUser = user.toObject({getters:true})
+delete newUser.password
 
 // send message 
 res.status(200).json({
   success:true,
-  user, 
+  user:newUser, 
+  message: 'User login successfully!'
+})
+
+    } catch (error) {
+       // handle error  
+        console.log('Error in login user', error);
+        next(handleError(500, error.message))
+    }
+} 
+ 
+// Google login controller 
+
+export const GoogleLogin = async (req, res, next)=>{ 
+    try { 
+      const { firstName, email, avatar} = req.body  
+      let user; 
+       user = await User.findOne({email}) 
+
+      if(!user){
+        // create new user   
+        const password = Math.random().toString();
+        
+
+        const hashPassword = bcryptjs.hashSync(password);
+        const newUser = new User({
+          firstName, 
+          email,  
+          password:hashPassword, 
+          avatar
+        })  
+
+       user =  await newUser.save();
+
+      } 
+
+ 
+ // then we create JWT token for login 
+ 
+const token = jwt.sign({ 
+  _id: user._id,
+  firstName: user.firstName,
+  email : user.email,
+  avatar: user.avatar
+}, process.env.JWT_SECRET_KEY)
+
+     
+//set cookie
+res.cookie('access_toeken', token, {
+  httpOnly:true,
+  secure: process.env.NODE_ENV  === 'production',
+  sameSite:process.env.NODE_ENV  === 'production' 
+  ? 'none':'strict', 
+  path:'/'
+
+})
+  
+const newUser = user.toObject({getters:true})
+delete newUser.password
+
+// send message 
+res.status(200).json({
+  success:true,
+ user:newUser, 
   message: 'User login successfully!'
 })
 

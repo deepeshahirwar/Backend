@@ -15,7 +15,8 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
 
   return (
-    <BrowserRouter>
+    <BrowserRouter> 
+    
       <Routes>
 
         <Route
@@ -29,7 +30,9 @@ function App() {
 
 
 
-      </Routes> 
+      </Routes>  
+
+     
 
        <ToastContainer />
     </BrowserRouter>

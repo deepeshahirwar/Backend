@@ -7,8 +7,13 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 import { toast } from 'react-toastify'; 
 import {getEnv} from '../helpers/getEnv'
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/redux/user/user.slice';
+import GoogleLogin from '@/components/GoogleLogin';
 
-const SignIn = () => { 
+const SignIn = () => {  
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
   
@@ -66,12 +71,16 @@ const SignIn = () => {
               credentials:'include',
               body: JSON.stringify(formData),
             });
+          const data = await response.json();
+            if (!response.ok) { 
+              return toast.error('SignIn Failed !', 'Invalid email or password');
+            
+            }  
+ 
+            // set user data 
+            dispatch(setUser(data.user))
       
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-      
-            const data = await response.json();
+          
             console.log('SignIn respones:', data);
             toast.success('User SignIn Successfully !')
             
@@ -109,6 +118,17 @@ const SignIn = () => {
 
         <h2 className="text-2xl font-medium text-gray-800 text-center mb-2">Sign in</h2>
         <p className="text-sm text-gray-600 text-center mb-6">to continue to YourApp</p>
+  
+       {/* Google sign- up */}
+       <div className='mb-4 '>
+        <GoogleLogin/>
+       </div> 
+        
+        <div className="border-b border-gray-300 mb-6"></div>
+
+
+
+
 
         <form onSubmit={handleSubmit} noValidate>
           {/* Email Field */}

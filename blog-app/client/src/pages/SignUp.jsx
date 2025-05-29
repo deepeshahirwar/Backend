@@ -6,6 +6,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { toast } from 'react-toastify'; // Import toast for notifications
 import {getEnv} from '../helpers/getEnv'; // Import getEnv function to access environment variables
 import { useNavigate } from 'react-router-dom';
+import GoogleLogin from '@/components/GoogleLogin';
 
 const SignUp = () => {  
 
@@ -122,6 +123,14 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
         <h2 className="text-2xl font-semibold text-gray-800 text-center mb-1">Create your account</h2>
         <p className="text-sm text-gray-600 text-center mb-6">to continue to YourApp</p>
+      
+      {/* Google sign- up */}
+       <div className='mb-4 '>
+        <GoogleLogin/>
+       </div> 
+        
+        <div className="border-b border-gray-300 mb-6"></div>
+
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="mb-4">
