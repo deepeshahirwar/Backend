@@ -157,4 +157,35 @@ res.status(200).json({
         console.log('Error in login user', error);
         next(handleError(500, error.message))
     }
+} 
+
+
+// User Logout controller 
+export const Logout = async(req, res, next)=>{
+  try {  
+
+//remove cookie
+res.clearCookie('access_toeken',  {
+  httpOnly:true,
+  secure: process.env.NODE_ENV  === 'production',
+  sameSite:process.env.NODE_ENV  === 'production' 
+  ? 'none':'strict', 
+  path:'/'
+
+})
+  
+
+// send message 
+res.status(200).json({
+  success:true,
+ 
+  message: 'User logout successfully!'
+})
+
+    } catch (error) {
+       // handle error  
+        console.log('Error in login user', error);
+        next(handleError(500, error.message))
+    }
+
 }

@@ -3,13 +3,14 @@ import './App.css'
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './layout/Layout'
-import { RouteIndex, RouteSingIn, RouteSingUp } from './helpers/RouteNames'
+import { RouteIndex, RouteProfile, RouteSingIn, RouteSingUp } from './helpers/RouteNames'
 import Index from './pages/Index'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
  
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Profile from './pages/Profile'
 
 
 function App() {
@@ -19,9 +20,9 @@ function App() {
     
       <Routes>
 
-        <Route
-          path={RouteIndex} element={<Layout />}>
+  <Route path={RouteIndex} element={<Layout />}>
           <Route index element={<Index />} />
+           <Route  path={RouteProfile}  element={<Profile />} />
 
         </Route>
 
